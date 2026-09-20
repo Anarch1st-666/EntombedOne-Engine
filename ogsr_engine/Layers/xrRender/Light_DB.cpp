@@ -29,22 +29,36 @@ void CLight_DB::Load(IReader* fs)
 
             Flight Ldata;
             F->r(&Ldata, sizeof(Flight));
+            light* L = Create();
+            L->flags.bStatic = true;
 
             if (Ldata.type == D3DLIGHT_DIRECTIONAL)
             {
                 Fvector tmp_R;
                 tmp_R.set(1, 0, 0);
 
-                light* L = Create();
-                L->flags.bStatic = true;
                 L->set_type(IRender_Light::DIRECT);
                 L->set_shadow(false);
                 L->set_rotation(Ldata.direction, tmp_R);
 
                 // copy to env-sun
                 sun_adapted = L;
+            }
+            else
+            {
+                Fvector tmp_D, tmp_R;
+                tmp_D.set(0, 0, -1); // forward
+                tmp_R.set(1, 0, 0); // right
 
-                break;
+                // point
+                v_static.push_back(L);
+                L->set_position(Ldata.position);
+                L->set_rotation(tmp_D, tmp_R);
+                L->set_range(Ldata.range);
+                L->set_color(Ldata.diffuse);
+                L->set_shadow(true);
+                L->set_volumetric(false);
+                L->set_active(true);
             }
         }
 
@@ -68,6 +82,7 @@ void CLight_DB::LoadHemi()
             u32 count = size / element;
             VERIFY(count * element == size);
             v_hemi.reserve(count);
+            v_static.reserve(count);
 
             for (u32 i = 0; i < count; i++)
             {
@@ -109,6 +124,7 @@ void CLight_DB::LoadHemi()
 
 void CLight_DB::Unload()
 {
+    v_static.clear();
     v_hemi.clear();
     sun_adapted.destroy();
 }
@@ -130,9 +146,6 @@ void CLight_DB::add_light(light* L)
 
     if (RImplementation.o.noshadows)
         L->set_shadow(false);
-
-    if (L->flags.bStatic /*&& !ps_r2_ls_flags.test(R2FLAG_R1LIGHTS)*/)
-        return;
 
     if (ps_r2_ls_flags_ext.test(R2FLAGEXT_DISABLE_LIGHT))
         return;

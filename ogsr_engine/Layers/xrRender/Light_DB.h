@@ -10,6 +10,7 @@ public:
     light_Package package{};
 
     xr_vector<ref_light> v_hemi;
+    xr_vector<ref_light> v_static;
 
 public:
     void add_light(light* L);
