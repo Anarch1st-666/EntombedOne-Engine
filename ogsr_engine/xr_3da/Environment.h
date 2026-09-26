@@ -319,6 +319,7 @@ public:
 
     void UpdateAmbient();
     CEnvAmbient* AppendEnvAmb(const shared_str& sect);
+    CEnvAmbient* m_forced_ambient = nullptr; // Ambient override
 
     void Invalidate();
 
@@ -353,6 +354,10 @@ public:
     void SetGameTime(float game_time, float time_factor);
 
     u32 GetWeatherLastShift() const { return m_last_weather_shift; }
+
+    void SetForcedAmbient(LPCSTR sect);
+    CEnvAmbient* GetForcedAmbient() const { return m_forced_ambient; }
+    bool HasForcedAmbient() const { return m_forced_ambient != nullptr; }
 
     void OnDeviceCreate();
     void OnDeviceDestroy();

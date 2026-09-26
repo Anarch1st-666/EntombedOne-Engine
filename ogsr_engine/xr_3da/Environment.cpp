@@ -348,6 +348,16 @@ void CEnvironment::StopWeatherFX()
 #endif
 }
 
+void CEnvironment::SetForcedAmbient(LPCSTR sect)
+{
+    if (!sect || !sect[0])
+    {
+        m_forced_ambient = nullptr;
+        return;
+    }
+    m_forced_ambient = AppendEnvAmb(sect);
+}
+
 IC bool lb_env_pred(const CEnvDescriptor* x, float val) { return x->exec_time < val; }
 
 void CEnvironment::SelectEnv(EnvVec* envs, CEnvDescriptor*& e, float gt)

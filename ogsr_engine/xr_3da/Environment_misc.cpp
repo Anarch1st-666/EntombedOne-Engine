@@ -1011,6 +1011,7 @@ void CEnvironment::unload()
     xr_delete(eff_Rain);
     xr_delete(eff_LensFlare);
     xr_delete(eff_Thunderbolt);
+    m_forced_ambient = nullptr;
     CurrentWeather = nullptr;
     CurrentWeatherName = nullptr;
     CurrentEnv->clear();

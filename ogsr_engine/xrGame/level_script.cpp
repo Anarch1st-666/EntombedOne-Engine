@@ -141,6 +141,14 @@ float get_wfx_time() { return (g_pGamePersistent->Environment().wfx_time); }
 
 void stop_weather_fx() { g_pGamePersistent->Environment().StopWeatherFX(); }
 
+void set_environment_ambient(LPCSTR sect) { g_pGamePersistent->Environment().SetForcedAmbient(sect); }
+
+LPCSTR get_environment_ambient()
+{
+    CEnvAmbient* amb = g_pGamePersistent->Environment().GetForcedAmbient();
+    return amb ? amb->name().c_str() : "";
+}
+
 void set_time_factor(float time_factor)
 {
     Level().Server->game->SetGameTimeFactor(time_factor);
@@ -1050,6 +1058,8 @@ void CLevel::script_register(lua_State* L)
             def("get_weather", &get_weather), def("get_weather_prev", &get_weather_prev), def("get_weather_last_shift", &get_weather_last_shift), def("set_weather", &set_weather),
             def("set_weather_next", &set_weather_next), def("set_weather_fx", &set_weather_fx), def("start_weather_fx_from_time", &start_weather_fx_from_time),
             def("is_wfx_playing", &is_wfx_playing), def("get_wfx_time", &get_wfx_time), def("stop_weather_fx", &stop_weather_fx), def("environment", &environment),
+
+            def("set_environment_ambient", &set_environment_ambient), def("get_environment_ambient", &get_environment_ambient),
 
             def("set_time_factor", &set_time_factor), def("get_time_factor", &get_time_factor),
 

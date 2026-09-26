@@ -210,16 +210,21 @@ void CGamePersistent::WeathersUpdate()
 
             int data_set = (Random.randF() < (1.f - Environment().CurrentEnv->weight)) ? 0 : 1;
 
-            CEnvDescriptor* const current_env = Environment().Current[0];
+           CEnvDescriptor* const current_env = Environment().Current[0];
             CEnvDescriptor* const _env = Environment().Current[data_set];
 
             if (!current_env || !_env)
                 return;
 
-            CEnvAmbient* env_amb = _env->env_ambient;
+            // NEW: принудительный ambient имеет приоритет
+            CEnvAmbient* forced_amb = Environment().GetForcedAmbient();
+
+            CEnvAmbient* env_amb = forced_amb ? forced_amb : _env->env_ambient;
+            CEnvAmbient* current_amb = forced_amb ? forced_amb : current_env->env_ambient;
+
             if (env_amb)
             {
-                CEnvAmbient::SSndChannelVec& vec = current_env->env_ambient->get_snd_channels();
+                CEnvAmbient::SSndChannelVec& vec = current_amb->get_snd_channels();
                 CEnvAmbient::SSndChannelVecIt I = vec.begin();
                 CEnvAmbient::SSndChannelVecIt E = vec.end();
 
@@ -393,7 +398,10 @@ void CGamePersistent::WeathersUpdate()
             if (!_env)
                 return;
 
-            CEnvAmbient* env_amb = _env->env_ambient;
+            // NEW: принудительный ambient имеет приоритет
+            CEnvAmbient* env_amb = Environment().GetForcedAmbient();
+            if (!env_amb)
+                env_amb = _env->env_ambient;
 
             // start sound
             if (env_amb)
