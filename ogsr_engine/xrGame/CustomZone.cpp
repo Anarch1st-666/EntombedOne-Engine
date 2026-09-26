@@ -510,6 +510,12 @@ bool CCustomZone::AccumulateState()
 {
     if (m_iStateTime >= m_StateTime[eZoneStateAccumulate])
     {
+        if (DestroyAfterBlowout)
+        {
+            DestroyObject();
+            return false;
+        }
+
         if (m_bZoneActive)
             SwitchZoneState(eZoneStateBlowout);
         else
@@ -673,9 +679,6 @@ void CCustomZone::shedule_Update(u32 dt)
         inherited::shedule_Update(dt);
 
     UpdateOnOffState();
-
-    if (LastBlowoutTime && (Device.dwTimeGlobal - LastBlowoutTime) > 300)
-        DestroyObject();
 }
 
 void CCustomZone::CheckForAwaking()
@@ -866,9 +869,6 @@ void CCustomZone::PlayBlowoutParticles()
     pParticles->Play(false);
 
     m_fBlowoutTimeLeft = Device.dwTimeGlobal + m_BendGrass_Blowout_time;
-
-    if (DestroyAfterBlowout)
-        LastBlowoutTime = Device.dwTimeGlobal;
 }
 
 void CCustomZone::PlayHitParticles(CGameObject* pObject)
