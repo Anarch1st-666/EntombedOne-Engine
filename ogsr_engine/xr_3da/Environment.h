@@ -414,6 +414,14 @@ public:
     float p_sky_color;
     float p_sun_color;
     float p_fog_color;
+
+public:
+    float m_ambient_color_factor{1.f};
+    float m_fog_color_factor{1.f};
+
+public:
+    void set_ambient_color_factor(float factor) { m_ambient_color_factor = std::max(factor, 0.f);}
+    void set_fog_color_factor(float factor) { m_fog_color_factor = std::max(factor, 0.f);}
 };
 
 ENGINE_API extern Flags32 psEnvFlags;

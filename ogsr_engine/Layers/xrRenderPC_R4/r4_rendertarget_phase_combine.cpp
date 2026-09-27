@@ -34,9 +34,11 @@ void CRenderTarget::phase_combine(CBackend& cmd_list)
         PIX_EVENT(combine_1);
 
         // Compute params
-        CEnvDescriptorMixer& envdesc = *g_pGamePersistent->Environment().CurrentEnv;
+        CEnvironment& env = g_pGamePersistent->Environment();
+        CEnvDescriptorMixer& envdesc = *env.CurrentEnv;
         const float minamb = ps_pnv_mode == 1 ? 0.005f : 0.001f;
-        Fvector4 ambclr = {std::max(envdesc.ambient.x * 2, minamb), std::max(envdesc.ambient.y * 2, minamb), std::max(envdesc.ambient.z * 2, minamb), 0};
+        float ambFactor = env.m_ambient_color_factor * 2;
+        Fvector4 ambclr = {std::max(envdesc.ambient.x * ambFactor, minamb), std::max(envdesc.ambient.y * ambFactor, minamb), std::max(envdesc.ambient.z * ambFactor, minamb), 0};
         ambclr.mul(ps_r2_sun_lumscale_amb);
 
         Fvector4 envclr;
@@ -46,7 +48,7 @@ void CRenderTarget::phase_combine(CBackend& cmd_list)
         else
             envclr = {envdesc.sky_color.x * 2 + EPS, envdesc.sky_color.y * 2 + EPS, envdesc.sky_color.z * 2 + EPS, envdesc.weight};
 
-        Fvector4 fogclr = {envdesc.fog_color.x, envdesc.fog_color.y, envdesc.fog_color.z, 0};
+        Fvector4 fogclr = {envdesc.fog_color.x * env.m_fog_color_factor, envdesc.fog_color.y * env.m_ambient_color_factor, envdesc.fog_color.z * env.m_ambient_color_factor, 0};
         envclr.x *= 2 * ps_r2_sun_lumscale_hemi;
         envclr.y *= 2 * ps_r2_sun_lumscale_hemi;
         envclr.z *= 2 * ps_r2_sun_lumscale_hemi;
