@@ -83,7 +83,6 @@ CInventory::CInventory()
     m_slots[OUTFIT_SLOT].m_bVisible = false;
     m_slots[TORCH_SLOT].m_bVisible = false;
     m_slots[HELMET_SLOT].m_bVisible = false;
-    m_slots[NIGHT_VISION_SLOT].m_bVisible = false;
     m_slots[BIODETECTOR_SLOT].m_bVisible = false;
     m_slots[DETECTOR_SLOT].m_bVisible = false; // KRodin: это очень важно! Слот для зп-стайл детекторов должен быть НЕ активируемым!
 
@@ -599,9 +598,18 @@ bool CInventory::Action(s32 cmd, u32 flags)
         }
     }
     break;
+    case kWPN_12: {
+        if (flags & CMD_START)
+        {
+            if (GetActiveSlot() == NIGHT_VISION_SLOT && ActiveItem())
+                Activate(NO_ACTIVE_SLOT);
+            else
+                Activate(NIGHT_VISION_SLOT, eKeyAction);
+        }
+    }
+    break;
     case kACTIVE_JOBS:
-    case kMAP:
-    case kCONTACTS: {
+    case kMAP: {
         if (flags & CMD_START)
         {
             auto Pda = m_pOwner->GetPDA();
@@ -617,7 +625,7 @@ bool CInventory::Action(s32 cmd, u32 flags)
                 auto pGameSP = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
                 if (pGameSP->InventoryMenu->IsShown())
                     break;
-                pGameSP->PdaMenu->SetActiveSubdialog(cmd == kACTIVE_JOBS ? eptQuests : (cmd == kMAP ? eptMap : eptContacts));
+                pGameSP->PdaMenu->SetActiveSubdialog(cmd == kACTIVE_JOBS ? eptQuests : (cmd == kCONTACTS ? eptContacts : eptMap));
                 Activate(PDA_SLOT, eKeyAction);
             }
         }

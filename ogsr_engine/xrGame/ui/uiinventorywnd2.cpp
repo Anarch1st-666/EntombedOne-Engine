@@ -80,14 +80,11 @@ void CUIInventoryWnd::InitInventory()
         m_pUIPistolList->SetItem(itm);
     }
 
-    if (Core.Features.test(xrCore::Feature::ogse_new_slots))
+    _itm = m_pInv->m_slots[KNIFE_SLOT].m_pIItem;
+    if (_itm)
     {
-        _itm = m_pInv->m_slots[KNIFE_SLOT].m_pIItem;
-        if (_itm)
-        {
-            CUICellItem* itm = create_cell_item(_itm);
-            m_pUIKnifeList->SetItem(itm);
-        }
+        CUICellItem* itm = create_cell_item(_itm);
+        m_pUIKnifeList->SetItem(itm);
     }
 
     _itm = m_pInv->m_slots[SECOND_WEAPON_SLOT].m_pIItem;
@@ -96,15 +93,23 @@ void CUIInventoryWnd::InitInventory()
         CUICellItem* itm = create_cell_item(_itm);
         m_pUIAutomaticList->SetItem(itm);
     }
+
     _itm = m_pInv->m_slots[APPARATUS_SLOT].m_pIItem;
+    if (_itm)
+    {
+        CUICellItem* itm = create_cell_item(_itm);
+        m_pUIBinocularList->SetItem(itm);
+    }
+
+    _itm = m_pInv->m_slots[NIGHT_VISION_SLOT].m_pIItem;
+    if (_itm)
+    {
+        CUICellItem* itm = create_cell_item(_itm);
+        m_pUINightVisionList->SetItem(itm);
+    }
 
     if (Core.Features.test(xrCore::Feature::ogse_new_slots))
     {
-        if (_itm)
-        {
-            CUICellItem* itm = create_cell_item(_itm);
-            m_pUIBinocularList->SetItem(itm);
-        }
 
         _itm = m_pInv->m_slots[DETECTOR_SLOT].m_pIItem;
         if (_itm)
@@ -125,13 +130,6 @@ void CUIInventoryWnd::InitInventory()
         {
             CUICellItem* itm = create_cell_item(_itm);
             m_pUIHelmetList->SetItem(itm);
-        }
-
-        _itm = m_pInv->m_slots[NIGHT_VISION_SLOT].m_pIItem;
-        if (_itm)
-        {
-            CUICellItem* itm = create_cell_item(_itm);
-            m_pUINightVisionList->SetItem(itm);
         }
 
         _itm = m_pInv->m_slots[BIODETECTOR_SLOT].m_pIItem;
@@ -531,17 +529,16 @@ void CUIInventoryWnd::ClearAllLists()
     m_pUIBeltList->ClearAll(true);
     m_pUIOutfitList->ClearAll(true);
     m_pUIPistolList->ClearAll(true);
-    if (Core.Features.test(xrCore::Feature::ogse_new_slots))
-        m_pUIKnifeList->ClearAll(true);
+    m_pUIKnifeList->ClearAll(true);
     m_pUIAutomaticList->ClearAll(true);
+    m_pUINightVisionList->ClearAll(true);
+    m_pUIBinocularList->ClearAll(true);
     if (Core.Features.test(xrCore::Feature::ogse_new_slots))
     {
         m_pUIDetectorList->ClearAll(true);
         m_pUITorchList->ClearAll(true);
         m_pUIHelmetList->ClearAll(true);
-        m_pUINightVisionList->ClearAll(true);
         m_pUIBIODetList->ClearAll(true);
-        m_pUIBinocularList->ClearAll(true);
     }
 }
 

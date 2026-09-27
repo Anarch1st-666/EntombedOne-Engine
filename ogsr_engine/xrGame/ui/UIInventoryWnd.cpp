@@ -126,14 +126,11 @@ void CUIInventoryWnd::Init()
     xml_init.InitDragDropListEx(uiXml, "dragdrop_outfit", 0, m_pUIOutfitList);
     BindDragDropListEnents(m_pUIOutfitList);
 
-    if (Core.Features.test(xrCore::Feature::ogse_new_slots))
-    {
-        m_pUIKnifeList = xr_new<CUIDragDropListEx>();
-        AttachChild(m_pUIKnifeList);
-        m_pUIKnifeList->SetAutoDelete(true);
-        xml_init.InitDragDropListEx(uiXml, "dragdrop_knife", 0, m_pUIKnifeList);
-        BindDragDropListEnents(m_pUIKnifeList);
-    }
+    m_pUIKnifeList = xr_new<CUIDragDropListEx>();
+    AttachChild(m_pUIKnifeList);
+    m_pUIKnifeList->SetAutoDelete(true);
+    xml_init.InitDragDropListEx(uiXml, "dragdrop_knife", 0, m_pUIKnifeList);
+    BindDragDropListEnents(m_pUIKnifeList);
 
     m_pUIPistolList = xr_new<CUIDragDropListEx>();
     AttachChild(m_pUIPistolList);
@@ -147,14 +144,20 @@ void CUIInventoryWnd::Init()
     xml_init.InitDragDropListEx(uiXml, "dragdrop_automatic", 0, m_pUIAutomaticList);
     BindDragDropListEnents(m_pUIAutomaticList);
 
+    m_pUIBinocularList = xr_new<CUIDragDropListEx>();
+    AttachChild(m_pUIBinocularList);
+    m_pUIBinocularList->SetAutoDelete(true);
+    xml_init.InitDragDropListEx(uiXml, "dragdrop_binocular", 0, m_pUIBinocularList);
+    BindDragDropListEnents(m_pUIBinocularList);
+
+    m_pUINightVisionList = xr_new<CUIDragDropListEx>();
+    AttachChild(m_pUINightVisionList);
+    m_pUINightVisionList->SetAutoDelete(true);
+    xml_init.InitDragDropListEx(uiXml, "dragdrop_nv", 0, m_pUINightVisionList);
+    BindDragDropListEnents(m_pUINightVisionList);
+
     if (Core.Features.test(xrCore::Feature::ogse_new_slots))
     {
-        m_pUIBinocularList = xr_new<CUIDragDropListEx>();
-        AttachChild(m_pUIBinocularList);
-        m_pUIBinocularList->SetAutoDelete(true);
-        xml_init.InitDragDropListEx(uiXml, "dragdrop_binocular", 0, m_pUIBinocularList);
-        BindDragDropListEnents(m_pUIBinocularList);
-
         m_pUIHelmetList = xr_new<CUIDragDropListEx>();
         AttachChild(m_pUIHelmetList);
         m_pUIHelmetList->SetAutoDelete(true);
@@ -166,12 +169,6 @@ void CUIInventoryWnd::Init()
         m_pUIBIODetList->SetAutoDelete(true);
         xml_init.InitDragDropListEx(uiXml, "dragdrop_biodetector", 0, m_pUIBIODetList);
         BindDragDropListEnents(m_pUIBIODetList);
-
-        m_pUINightVisionList = xr_new<CUIDragDropListEx>();
-        AttachChild(m_pUINightVisionList);
-        m_pUINightVisionList->SetAutoDelete(true);
-        xml_init.InitDragDropListEx(uiXml, "dragdrop_nv", 0, m_pUINightVisionList);
-        BindDragDropListEnents(m_pUINightVisionList);
 
         m_pUIDetectorList = xr_new<CUIDragDropListEx>();
         AttachChild(m_pUIDetectorList);
@@ -189,16 +186,15 @@ void CUIInventoryWnd::Init()
     for (u8 i = 0; i < SLOTS_TOTAL; i++)
         m_slots_array[i] = NULL;
     m_slots_array[OUTFIT_SLOT] = m_pUIOutfitList;
-    if (Core.Features.test(xrCore::Feature::ogse_new_slots))
-        m_slots_array[KNIFE_SLOT] = m_pUIKnifeList;
+    m_slots_array[KNIFE_SLOT] = m_pUIKnifeList;
     m_slots_array[FIRST_WEAPON_SLOT] = m_pUIPistolList;
     m_slots_array[SECOND_WEAPON_SLOT] = m_pUIAutomaticList;
+    m_slots_array[APPARATUS_SLOT] = m_pUIBinocularList;
+    m_slots_array[NIGHT_VISION_SLOT] = m_pUINightVisionList;
     if (Core.Features.test(xrCore::Feature::ogse_new_slots))
     {
-        m_slots_array[APPARATUS_SLOT] = m_pUIBinocularList;
         m_slots_array[HELMET_SLOT] = m_pUIHelmetList;
         m_slots_array[BIODETECTOR_SLOT] = m_pUIBIODetList;
-        m_slots_array[NIGHT_VISION_SLOT] = m_pUINightVisionList;
         m_slots_array[DETECTOR_SLOT] = m_pUIDetectorList;
         m_slots_array[TORCH_SLOT] = m_pUITorchList;
     }
