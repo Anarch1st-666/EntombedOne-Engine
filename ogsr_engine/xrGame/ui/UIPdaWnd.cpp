@@ -557,6 +557,9 @@ void RearrangeTabButtons(CUITabControl* pTab, xr_vector<Fvector2>& vec_sign_plac
         (*it)->AdjustWidthToText();
         btn_text_len = (*it)->GetWndSize().x;
         pos.x += btn_text_len + 3.0f;
+
+        if (idx == eptContacts || idx == eptRanking)
+            (*it)->Enable(false);
     }
 }
 bool CUIPdaWnd::OnKeyboard(int dik, EUIMessages keyboard_action)

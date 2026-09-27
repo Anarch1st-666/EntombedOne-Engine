@@ -140,8 +140,11 @@ void CUIMainIngameWnd::Init()
     AttachChild(&UIStaticHealth);
     xml_init.InitStatic(uiXml, "static_health", 0, &UIStaticHealth);
 
-    AttachChild(&UIStaticArmor);
-    xml_init.InitStatic(uiXml, "static_armor", 0, &UIStaticArmor);
+    // AttachChild(&UIStaticArmor);
+    // xml_init.InitStatic(uiXml, "static_armor", 0, &UIStaticArmor);
+
+    AttachChild(&UIStaticStamina);
+    xml_init.InitStatic(uiXml, "static_stamina", 0, &UIStaticStamina);
 
     AttachChild(&UIWeaponBack);
     xml_init.InitStatic(uiXml, "static_weapon", 0, &UIWeaponBack);
@@ -182,9 +185,12 @@ void CUIMainIngameWnd::Init()
     xml_init.InitProgressBar(uiXml, "progress_bar_health", 0, &UIHealthBar);
 
     //Полоса прогресса армора
-    UIStaticArmor.AttachChild(&UIArmorBar);
-    //.	xml_init.InitAutoStaticGroup(uiXml,"static_armor", &UIStaticArmor);
-    xml_init.InitProgressBar(uiXml, "progress_bar_armor", 0, &UIArmorBar);
+    //UIStaticArmor.AttachChild(&UIArmorBar);
+    //xml_init.InitProgressBar(uiXml, "progress_bar_armor", 0, &UIArmorBar);
+
+    //Полоса прогресса выносливости, Entombed One HUD
+    UIStaticStamina.AttachChild(&UIStaminaBar);
+    xml_init.InitProgressBar(uiXml, "progress_bar_stamina", 0, &UIStaminaBar);
 
     // Подсказки, которые возникают при наведении прицела на объект
     AttachChild(&UIStaticQuickHelp);
@@ -358,19 +364,7 @@ void CUIMainIngameWnd::Update()
                 TurnOffWarningIcon(ewiInvincible);
         }
 
-        // Armor indicator stuff
-        PIItem pItem = m_pActor->inventory().ItemFromSlot(OUTFIT_SLOT);
-        if (pItem)
-        {
-            UIArmorBar.Show(true);
-            UIStaticArmor.Show(true);
-            UIArmorBar.SetProgressPos(pItem->GetCondition() * 100);
-        }
-        else
-        {
-            UIArmorBar.Show(false);
-            UIStaticArmor.Show(false);
-        }
+        UIStaminaBar.SetProgressPos(m_pActor->conditions().GetPower() * 100); // Entombed One HUD
 
         UpdateActiveItemInfo();
 

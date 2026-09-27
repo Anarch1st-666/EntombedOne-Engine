@@ -41,9 +41,11 @@ public:
 protected:
     CUIStatic UIStaticHealth;
     CUIStatic UIStaticArmor;
+    CUIStatic UIStaticStamina; // Entombed One HUD
     CUIStatic UIStaticQuickHelp;
     CUIProgressBar UIHealthBar;
     CUIProgressBar UIArmorBar;
+    CUIProgressBar UIStaminaBar;
     CUICarPanel UICarPanel;
     CUIMotionIcon UIMotionIcon;
     CUIZoneMap* UIZoneMap;

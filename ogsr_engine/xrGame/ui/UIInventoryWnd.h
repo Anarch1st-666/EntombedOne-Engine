@@ -123,9 +123,14 @@ protected:
 
     CUIStatic UIProgressBack;
     CUIStatic UIProgressBack_rank;
+
     CUIProgressBar UIProgressBarHealth;
-    CUIProgressBar UIProgressBarPsyHealth;
+    CUIProgressBar UIProgressBarArmor;
+    CUIProgressBar UIProgressBarStamina;
     CUIProgressBar UIProgressBarRadiation;
+    CUIProgressBar UIProgressBarHunger;
+    CUIProgressBar UIProgressBarPsyHealth;
+
     CUIProgressBar UIProgressBarRank;
 
     CUIPropertiesBox UIPropertiesBox;

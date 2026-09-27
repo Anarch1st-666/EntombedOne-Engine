@@ -91,11 +91,20 @@ void CUIInventoryWnd::Init()
     UIProgressBack.AttachChild(&UIProgressBarHealth);
     xml_init.InitProgressBar(uiXml, "progress_bar_health", 0, &UIProgressBarHealth);
 
-    UIProgressBack.AttachChild(&UIProgressBarPsyHealth);
-    xml_init.InitProgressBar(uiXml, "progress_bar_psy", 0, &UIProgressBarPsyHealth);
+    UIProgressBack.AttachChild(&UIProgressBarArmor);
+    xml_init.InitProgressBar(uiXml, "progress_bar_armor", 0, &UIProgressBarArmor);
+
+    UIProgressBack.AttachChild(&UIProgressBarStamina);
+    xml_init.InitProgressBar(uiXml, "progress_bar_stamina", 0, &UIProgressBarStamina);
 
     UIProgressBack.AttachChild(&UIProgressBarRadiation);
     xml_init.InitProgressBar(uiXml, "progress_bar_radiation", 0, &UIProgressBarRadiation);
+
+    UIProgressBack.AttachChild(&UIProgressBarHunger);
+    xml_init.InitProgressBar(uiXml, "progress_bar_hunger", 0, &UIProgressBarHunger);
+
+    UIProgressBack.AttachChild(&UIProgressBarPsyHealth);
+    xml_init.InitProgressBar(uiXml, "progress_bar_psy", 0, &UIProgressBarPsyHealth);
 
     UIPersonalWnd.AttachChild(&UIStaticPersonal);
     xml_init.InitStatic(uiXml, "static_personal", 0, &UIStaticPersonal);
@@ -299,11 +308,25 @@ void CUIInventoryWnd::Update()
         float v = pEntityAlive->conditions().GetHealth() * 100.0f;
         UIProgressBarHealth.SetProgressPos(v);
 
-        v = pEntityAlive->conditions().GetPsyHealth() * 100.0f;
-        UIProgressBarPsyHealth.SetProgressPos(v);
+        CActor* pActor = smart_cast<CActor*>(pEntityAlive);
+        if (pActor)
+        {
+            PIItem pItem = pActor->inventory().ItemFromSlot(OUTFIT_SLOT);
+            v = pItem ? pItem->GetCondition() * 100.f : 0.f;
+            UIProgressBarArmor.SetProgressPos(v);
+        }
+
+        v = pEntityAlive->conditions().GetPower() * 100.f;
+        UIProgressBarStamina.SetProgressPos(v);
 
         v = pEntityAlive->conditions().GetRadiation() * 100.0f;
         UIProgressBarRadiation.SetProgressPos(v);
+
+        v = pEntityAlive->conditions().GetSatiety() * 100.f;
+        UIProgressBarHunger.SetProgressPos(v);
+
+        v = pEntityAlive->conditions().GetPsyHealth() * 100.0f;
+        UIProgressBarPsyHealth.SetProgressPos(v);
 
         CInventoryOwner* pOurInvOwner = smart_cast<CInventoryOwner*>(pEntityAlive);
 
