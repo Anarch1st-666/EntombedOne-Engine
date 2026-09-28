@@ -48,4 +48,5 @@ public:
 
     Fvector2 UIItemImageSize;
     CUIStatic* UIItemImage;
+    Frect UIItemImage_rect;
 };

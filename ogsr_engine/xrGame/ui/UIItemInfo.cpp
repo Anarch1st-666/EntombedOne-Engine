@@ -197,8 +197,25 @@ void CUIItemInfo::InitItem(CInventoryItem* pInvItem)
         v_r.x2 *= UI()->get_current_kx();
 
         UIItemImage->GetUIStaticItem().SetRect(v_r);
-        UIItemImage->SetWidth(_min(v_r.width(), UIItemImageSize.x));
-        UIItemImage->SetHeight(_min(v_r.height(), UIItemImageSize.y));
+
+        float width = v_r.width();
+        float height = v_r.height();
+        if (width > UIItemImageSize.x)
+        {
+            float coeff = UIItemImageSize.x / width;
+            width *= coeff;
+            height *= coeff;
+        }
+
+        if (height > UIItemImageSize.y)
+        {
+            float coeff = UIItemImageSize.y / height;
+            width *= coeff;
+            height *= coeff;
+        }
+
+        UIItemImage->SetWidth(width);
+        UIItemImage->SetHeight(height);
     }
 }
 

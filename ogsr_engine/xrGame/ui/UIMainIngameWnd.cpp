@@ -305,21 +305,26 @@ void CUIMainIngameWnd::SetAmmoIcon(const shared_str& sect_name)
 
     UIWeaponIcon.Show(true);
     // properties used by inventory menu
-    CIconParams icon_params(sect_name);
+    Frect texture_rect;
+    texture_rect.x1 = pSettings->r_float(sect_name, "inv_grid_x") * INV_GRID_WIDTH;
+    texture_rect.y1 = pSettings->r_float(sect_name, "inv_grid_y") * INV_GRID_HEIGHT;
+    texture_rect.x2 = pSettings->r_float(sect_name, "inv_grid_width") * INV_GRID_WIDTH;
+    texture_rect.y2 = pSettings->r_float(sect_name, "inv_grid_height") * INV_GRID_HEIGHT;
+    texture_rect.rb.add(texture_rect.lt);
 
-    icon_params.set_shader(&UIWeaponIcon);
+    UIWeaponIcon.GetUIStaticItem().SetOriginalRect(texture_rect);
+    UIWeaponIcon.SetStretchTexture(true);
 
-    float iGridWidth = icon_params.grid_width;
-
-    float w = std::clamp(iGridWidth, 1.f, 2.f) * INV_GRID_WIDTH;
-    float h = INV_GRID_HEIGHT;
-    w *= UI()->get_current_kx();
+    // now perform only width scale for ammo, which (W)size >2
+    // all others ammo (1x1, 1x2) will be not scaled (original picture)
+    float w = ((texture_rect.width() < 2.f * INV_GRID_WIDTH) ? 0.5f : 1.f) * UIWeaponIcon_rect.width();
+    float h = UIWeaponIcon_rect.height(); // 1 cell
 
     float x = UIWeaponIcon_rect.x1;
-    if (iGridWidth < 2.f)
-        x += w / 2.0f;
+    if (texture_rect.width() < 2.f * INV_GRID_WIDTH)
+        x += (UIWeaponIcon_rect.width() - w) / 2.0f;
 
-    UIWeaponIcon.SetWndPos(x, UIWeaponIcon_rect.y1);
+    UIWeaponIcon.SetWndPos(Fvector2().set(x, UIWeaponIcon_rect.y1));
 
     UIWeaponIcon.SetWidth(w);
     UIWeaponIcon.SetHeight(h);
