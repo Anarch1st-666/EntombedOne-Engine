@@ -81,15 +81,6 @@ CGameTask* CGameTaskManager::GiveGameTaskToActor(CGameTask* t, u32 timeToComplet
                 article_vector.emplace_back(obj->article_id, Level().GetGameTime(), article.data()->articleType);
             }
         }
-
-        if (obj->object_id != u16(-1) && obj->map_location.size() && obj->def_location_enabled)
-        {
-            CMapLocation* ml = Level().MapManager().AddMapLocation(obj->map_location, obj->object_id);
-            if (obj->map_hint.size())
-                ml->SetHint(obj->map_hint);
-            ml->DisablePointer();
-            ml->SetSerializable(true);
-        }
     }
     CGameTask* _at = ActiveTask();
     if (!_at || (_at->m_priority > t->m_priority))
@@ -157,23 +148,6 @@ void CGameTaskManager::SetTaskState(CGameTask* t, u16 objective_num, ETaskState 
             if (t->Objective(i).TaskState() == eTaskStateInProgress)
                 SetTaskState(t, i, state);
     }
-    else if (state == eTaskStateCompleted && objective_num < (t->m_Objectives.size() - 1))
-    {
-        // enable hidden locations for next objective
-        SGameTaskObjective& obj = t->Objective(objective_num + 1);
-
-        if (!obj.def_location_enabled && obj.TaskState() == eTaskStateInProgress)
-        {
-            if (obj.object_id != u16(-1) && *obj.map_location)
-            {
-                CMapLocation* ml = Level().MapManager().AddMapLocation(obj.map_location, obj.object_id);
-                if (obj.map_hint.size())
-                    ml->SetHint(obj.map_hint);
-                ml->DisablePointer();
-                ml->SetSerializable(true);
-            }
-        }
-    }
 
     if (isRoot && eTaskStateCompleted == state || eTaskStateFail == state || eTaskStateSkiped == state)
         t->m_FinishTime = Level().GetGameTime();
@@ -233,6 +207,7 @@ void CGameTaskManager::UpdateTasks()
                     continue;
             }
 
+            obj.UpdateVisibility();
             ETaskState state = obj.UpdateState();
             if (state == eTaskStateFail || state == eTaskStateCompleted || state == eTaskStateSkiped)
             {

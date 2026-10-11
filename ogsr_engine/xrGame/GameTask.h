@@ -42,7 +42,7 @@ private:
     CGameTask* parent;
     void SendInfo(xr_vector<shared_str>&);
     void CallAllFuncs(xr_vector<luabind::functor<bool>>& v);
-    bool CheckInfo(xr_vector<shared_str>&);
+    bool CheckInfo(xr_vector<shared_str>&, bool bDefault = false);
     bool CheckFunctions(xr_vector<luabind::functor<bool>>& v);
 
 public:
@@ -63,10 +63,11 @@ public:
     CMapLocation* LinkedMapLocation();
     ETaskState TaskState() { return task_state; };
     ETaskState UpdateState();
+    void UpdateVisibility();
 
     shared_str icon_texture_name;
     Frect icon_rect;
-    bool def_location_enabled;
+    bool m_bObjectiveVisible;
     // complete/fail stuff
     xr_vector<shared_str> m_completeInfos;
     xr_vector<shared_str> m_failInfos;
@@ -74,6 +75,7 @@ public:
     xr_vector<shared_str> m_infos_on_complete;
     xr_vector<shared_str> m_infos_on_fail;
     xr_vector<shared_str> m_infos_on_skiped;
+    xr_vector<shared_str> m_visibleInfos;
 
     xr_vector<luabind::functor<bool>> m_complete_lua_functions;
     xr_vector<luabind::functor<bool>> m_fail_lua_functions;
@@ -138,7 +140,6 @@ public:
     u32 m_priority{};
     u32 m_version;
     u32 m_objectives_version;
-    bool m_show_all_objectives;
 
     // for scripting access
     void Load_script(LPCSTR _id);

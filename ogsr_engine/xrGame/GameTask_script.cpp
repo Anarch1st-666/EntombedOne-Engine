@@ -25,7 +25,7 @@ void CGameTask::script_register(lua_State* L)
                   .def("set_object_id", &SGameTaskObjective::SetObjectID_script)
                   .def("get_object_id", &SGameTaskObjective::GetObjectID_script)
                   .def("set_icon_name", &SGameTaskObjective::SetIconName_script)
-                  .def_readwrite("def_ml_enabled", &SGameTaskObjective::def_location_enabled)
+                  .def_readwrite("def_ml_enabled", &SGameTaskObjective::m_bObjectiveVisible)
 
                   .def("add_complete_info", &SGameTaskObjective::AddCompleteInfo_script)
                   .def("add_fail_info", &SGameTaskObjective::AddFailInfo_script)

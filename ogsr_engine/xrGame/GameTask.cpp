@@ -73,7 +73,6 @@ CGameTask::CGameTask()
     m_ID = NULL;
     m_version = 0;
     m_objectives_version = 0;
-    m_show_all_objectives = false;
 }
 
 void CGameTask::Load(const TASK_ID& id)
@@ -93,8 +92,6 @@ void CGameTask::Load(const TASK_ID& id)
     m_priority = g_gameTaskXml->ReadAttribInt(g_gameTaskXml->GetLocalRoot(), "prio", -1);
     m_version = g_gameTaskXml->ReadAttribInt(g_gameTaskXml->GetLocalRoot(), "version", 0);
     m_objectives_version = g_gameTaskXml->ReadAttribInt(g_gameTaskXml->GetLocalRoot(), "objectives_version", 0);
-    m_show_all_objectives =
-        !!g_gameTaskXml->ReadAttribInt(g_gameTaskXml->GetLocalRoot(), "show_all_objectives", (Core.Features.test(xrCore::Feature::show_objectives_ondemand) ? 0 : 1));
 #ifdef DEBUG
     if (m_priority == u32(-1))
     {
@@ -142,12 +139,6 @@ void CGameTask::Load(const TASK_ID& id)
         objective.map_location = g_gameTaskXml->Read(l_root, "map_location_type", 0, NULL);
 
         LPCSTR object_story_id = g_gameTaskXml->Read(l_root, "object_story_id", 0, NULL);
-
-        //*
-        LPCSTR ddd;
-        ddd = g_gameTaskXml->Read(l_root, "map_location_hidden", 0, NULL);
-        if ((ddd || !m_show_all_objectives) && i > 1) // первая точка в квесте не может быть скрытая
-            objective.def_location_enabled = false;
 
         bool b1, b2;
         b1 = (0 == objective.map_location.size());
@@ -205,6 +196,12 @@ void CGameTask::Load(const TASK_ID& id)
         objective.m_infos_on_skiped.resize(info_num);
         for (j = 0; j < info_num; ++j)
             objective.m_infos_on_skiped[j] = g_gameTaskXml->Read(l_root, "infoportion_set_skipped", j, NULL);
+
+        //------infoportion_set_skiped
+        info_num = g_gameTaskXml->GetNodesNum(l_root, "infoportion_visible");
+        objective.m_visibleInfos.resize(info_num);
+        for (j = 0; j < info_num; ++j)
+            objective.m_visibleInfos[j] = g_gameTaskXml->Read(l_root, "infoportion_visible", j, NULL);
 
 
         //------function_complete
@@ -295,11 +292,11 @@ bool CGameTask::HasInProgressObjective()
 }
 
 SGameTaskObjective::SGameTaskObjective(CGameTask* parent, int _idx)
-    : description(NULL), article_id(NULL), map_location(NULL), object_id(u16(-1)), task_state(eTaskStateInProgress), def_location_enabled(true), parent(parent), idx(_idx)
+    : description(NULL), article_id(NULL), map_location(NULL), object_id(u16(-1)), task_state(eTaskStateInProgress), m_bObjectiveVisible(false), parent(parent), idx(_idx)
 {}
 
 SGameTaskObjective::SGameTaskObjective()
-    : description(NULL), article_id(NULL), map_location(NULL), object_id(u16(-1)), task_state(eTaskStateInProgress), def_location_enabled(true), parent(NULL), idx(0)
+    : description(NULL), article_id(NULL), map_location(NULL), object_id(u16(-1)), task_state(eTaskStateInProgress), m_bObjectiveVisible(false), parent(NULL), idx(0)
 {}
 
 CMapLocation* SGameTaskObjective::LinkedMapLocation()
@@ -332,6 +329,23 @@ void SGameTaskObjective::SetTaskState(ETaskState new_state)
 
         // callback for scripters
         ChangeStateCallback();
+    }
+}
+
+void SGameTaskObjective::UpdateVisibility()
+{
+    if (m_bObjectiveVisible)
+        return;
+
+    m_bObjectiveVisible = CheckInfo(m_visibleInfos, true);
+
+    if (m_bObjectiveVisible && object_id != u16(-1) && map_location.size())
+    {
+        CMapLocation* ml = Level().MapManager().AddMapLocation(map_location, object_id);
+        if (map_hint.size())
+            ml->SetHint(map_hint);
+        ml->DisablePointer();
+        ml->SetSerializable(true);
     }
 }
 
@@ -380,9 +394,9 @@ void SGameTaskObjective::SendInfo(xr_vector<shared_str>& v)
         Actor()->TransferInfo((*it), true);
 }
 
-bool SGameTaskObjective::CheckInfo(xr_vector<shared_str>& v)
+bool SGameTaskObjective::CheckInfo(xr_vector<shared_str>& v, bool bDefault)
 {
-    bool res = false;
+    bool res = bDefault;
     xr_vector<shared_str>::iterator it = v.begin();
     for (; it != v.end(); ++it)
     {
@@ -485,7 +499,7 @@ void SGameTaskObjective::save(IWriter& stream)
     save_data(map_location, stream);
     save_data(object_id, stream);
     save_data(task_state, stream);
-    save_data(def_location_enabled, stream);
+    save_data(m_bObjectiveVisible, stream);
     save_data(map_hint, stream);
     save_data(icon_texture_name, stream);
     save_data(icon_rect, stream);
@@ -497,6 +511,7 @@ void SGameTaskObjective::save(IWriter& stream)
     save_data(m_infos_on_complete, stream);
     save_data(m_infos_on_fail, stream);
     save_data(m_infos_on_skiped, stream);
+    save_data(m_visibleInfos, stream);
 
     bool b_script = m_pScriptHelper.not_empty();
     save_data(b_script, stream);
@@ -513,7 +528,7 @@ void SGameTaskObjective::load(IReader& stream)
     load_data(map_location, stream);
     load_data(object_id, stream);
     load_data(task_state, stream);
-    load_data(def_location_enabled, stream);
+    load_data(m_bObjectiveVisible, stream);
     load_data(map_hint, stream);
     load_data(icon_texture_name, stream);
     load_data(icon_rect, stream);
@@ -527,6 +542,7 @@ void SGameTaskObjective::load(IReader& stream)
     load_data(m_infos_on_fail, stream);
     if (ai().get_alife()->header().version() > 9)
         load_data(m_infos_on_skiped, stream);
+    load_data(m_visibleInfos, stream);
 
     bool b_script;
     load_data(b_script, stream); //-V614

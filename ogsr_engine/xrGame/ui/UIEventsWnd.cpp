@@ -140,35 +140,8 @@ void CUIEventsWnd::ReloadList(bool bClearOnly)
     for (const auto& task : game_tasks)
     {
         CUITaskItem* pTaskItem = NULL;
-        /*
-                if(task->m_Objectives[0].TaskState()==eTaskUserDefined)
-                {
-                    VERIFY				(task->m_Objectives.size()==1);
-                    pTaskItem			= xr_new<CUIUserTaskItem>(this);
-                    pTaskItem->SetGameTask			(task, 0);
-                    m_ListWnd->AddWindow			(pTaskItem,true);
-                }else
-        */
-        u32 visible_objectives = 0;
-        if (task->m_show_all_objectives || task->Objective(0).TaskState() != eTaskStateInProgress || task->m_Objectives.size() <= 2)
-        {
-            visible_objectives = task->m_Objectives.size();
-        }
-        else
-        {
-            for (u32 i = 0; i < task->m_Objectives.size(); i++)
-            {
-                auto& it = task->m_Objectives.at(i);
-                if (it.TaskState() != eTaskStateInProgress)
-                    visible_objectives = i + 1;
-            }
-            if (visible_objectives < 2)
-                visible_objectives = 2;
-            else if (visible_objectives < task->m_Objectives.size())
-                visible_objectives++;
-        }
-
-        for (u32 i = 0; i < visible_objectives; ++i)
+        
+        for (u32 i = 0; i < task->m_Objectives.size(); ++i)
         {
             if (i == 0)
             {
@@ -180,6 +153,12 @@ void CUIEventsWnd::ReloadList(bool bClearOnly)
             }
             pTaskItem->SetGameTask(task, (u16)i);
             m_ListWnd->AddWindow(pTaskItem, true);
+
+            auto& obj = task->Objective(i);
+            if (obj.m_bObjectiveVisible)
+                pTaskItem->Show(true);
+            else if (i > 0)
+                pTaskItem->Show(false);
         }
     }
 }
