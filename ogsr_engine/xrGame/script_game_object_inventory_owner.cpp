@@ -702,7 +702,14 @@ void CScriptGameObject::RunTalkDialog(CScriptGameObject* pToWho)
     VERIFY(pPartner);
     pActor->RunTalkDialog(pPartner);
 }
-/*
+
+void CScriptGameObject::AllowBreakDialog(bool allow_break)
+{
+    CInventoryOwner* inv_owner = smart_cast<CInventoryOwner*>(&object());
+    VERIFY(inv_owner);
+    inv_owner->bAllowBreakDialog = allow_break;
+}
+    /*
 void  CScriptGameObject::ActorSleep			(int hours, int minutes)
 {
     CActor* pActor = smart_cast<CActor*>(&object());	if(!pActor) return;

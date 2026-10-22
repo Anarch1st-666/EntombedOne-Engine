@@ -26,6 +26,8 @@ private:
     void PlaySnd(LPCSTR text);
     void StopSnd();
 
+    bool bAllowBreak{true};
+
 public:
     CUITalkWnd();
     virtual ~CUITalkWnd();
@@ -52,6 +54,7 @@ public:
     void SwitchToTrade();
     void AddAnswerScript(LPCSTR text, bool is_actor = false);
     void AddIconedMessage(LPCSTR text, LPCSTR texture_name, Frect texture_rect, LPCSTR templ_name);
+    void AllowBreak(bool b) { bAllowBreak = b; }
 
 protected:
     //диалог

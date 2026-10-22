@@ -381,7 +381,7 @@ bool CUITalkWnd::IR_OnKeyboardPress(int dik)
     EGameActions cmd = get_binded_action(dik);
     if (cmd == kUSE)
     {
-        if ((Core.Features.test(xrCore::Feature::disable_dialog_break) && m_pCurrentDialog) || (m_pOthersInvOwner && m_pOthersInvOwner->NeedOsoznanieMode()))
+        if ((!bAllowBreak && m_pCurrentDialog) || (m_pOthersInvOwner && m_pOthersInvOwner->NeedOsoznanieMode()))
         {
             return true;
         }
@@ -397,7 +397,7 @@ bool CUITalkWnd::OnKeyboard(int dik, EUIMessages keyboard_action)
     {
         return true;
     }
-    else if (Core.Features.test(xrCore::Feature::disable_dialog_break) && m_pCurrentDialog && keyboard_action == WINDOW_KEY_PRESSED)
+    else if (!bAllowBreak && m_pCurrentDialog && keyboard_action == WINDOW_KEY_PRESSED)
     {
         EGameActions cmd = get_binded_action(dik);
         if (cmd == kUSE || cmd == kQUIT)

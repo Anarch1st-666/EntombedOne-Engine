@@ -63,7 +63,7 @@ public:
 
     ////////////////////////////////////
     //торговля и общение с персонажем
-
+    bool bAllowBreakDialog{true};
     virtual bool AllowItemToTrade(CInventoryItem const* item, EItemPlace place) const;
     virtual void OnFollowerCmd(int cmd){}; // redefine for CAI_Stalkker
     //инициализация объекта торговли

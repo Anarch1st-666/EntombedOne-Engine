@@ -166,6 +166,7 @@ class_<CScriptGameObject> script_register_game_object2(class_<CScriptGameObject>
         .def("switch_to_trade", &CScriptGameObject::SwitchToTrade)
         .def("switch_to_talk", &CScriptGameObject::SwitchToTalk)
         .def("run_talk_dialog", &CScriptGameObject::RunTalkDialog)
+        .def("allow_break_dialog", &CScriptGameObject::AllowBreakDialog)
 
         .def("hide_weapon", &CScriptGameObject::HideWeapon)
         .def("restore_weapon", &CScriptGameObject::RestoreWeapon)

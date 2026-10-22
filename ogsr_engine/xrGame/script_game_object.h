@@ -346,6 +346,7 @@ public:
     void SwitchToTrade();
     void SwitchToTalk();
     void RunTalkDialog(CScriptGameObject* pToWho);
+    void AllowBreakDialog(bool allow_break);
 
     void HideWeapon();
     void RestoreWeapon();

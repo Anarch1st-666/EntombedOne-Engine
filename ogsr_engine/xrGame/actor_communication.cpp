@@ -249,6 +249,7 @@ void CActor::RunTalkDialog(CInventoryOwner* talk_partner)
         CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
         if (pGameSP)
         {
+            pGameSP->TalkMenu->AllowBreak(talk_partner->bAllowBreakDialog);
             if (pGameSP->MainInputReceiver())
                 Game().StartStopMenu(pGameSP->MainInputReceiver(), true);
             pGameSP->StartTalk();
