@@ -287,6 +287,10 @@ protected:
     void ScriptDebugRender();
 
 public:
+    CLevelSoundManager* LevelSoundManager() { return m_level_sound_manager; }
+    void SetMusicVolume(float v);
+    float GetMusicVolume();
+
     CMapManager& MapManager() { return *m_map_manager; }
     //	CFogOfWarMngr&			FogOfWarMngr				()	{return *m_pFogOfWarMngr;}
 

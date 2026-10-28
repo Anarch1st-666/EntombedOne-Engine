@@ -40,5 +40,7 @@ enum
 
 extern Flags32 psActorFlags;
 //extern Flags32 psCallbackFlags;
+extern int psActorQuickSaveNumberCurrent;
+constexpr int psActorQuickSaveNumberMax = 5;
 
 extern BOOL GodMode();

@@ -611,6 +611,11 @@ void set_snd_volume(float v)
     psSoundVFactor = v;
     clamp(psSoundVFactor, 0.0f, 1.0f);
 }
+
+void set_music_volume(float v) { Level().SetMusicVolume(v); }
+float get_music_volume() { return Level().GetMusicVolume(); }
+
+
 #include "actor_statistic_mgr.h"
 void add_actor_points(LPCSTR sect, LPCSTR detail_key, int cnt, int pts) { return Actor()->StatisticMgr().AddPoints(sect, detail_key, cnt, pts); }
 
@@ -1111,7 +1116,8 @@ void CLevel::script_register(lua_State* L)
             def("get_bounding_volume", &get_bounding_volume),
 
             def("iterate_sounds", &iterate_sounds1), def("iterate_sounds", &iterate_sounds2), def("physics_world", &physics_world), def("get_snd_volume", &get_snd_volume),
-            def("set_snd_volume", &set_snd_volume), def("add_cam_effector", &add_cam_effector), def("add_cam_effector2", &add_cam_effector2),
+            def("set_snd_volume", &set_snd_volume), def("set_music_volume", &set_music_volume), def("get_music_volume", &get_music_volume),
+            def("add_cam_effector", &add_cam_effector), def("add_cam_effector2", &add_cam_effector2),
             def("remove_cam_effector", &remove_cam_effector), def("add_pp_effector", &add_pp_effector), def("set_pp_effector_factor", &set_pp_effector_factor),
             def("set_pp_effector_factor", &set_pp_effector_factor2), def("remove_pp_effector", &remove_pp_effector),
 

@@ -197,7 +197,14 @@ void CLevel::IR_OnKeyboardPress(int key)
         FS.rescan_pathes();
 #endif // DEBUG
         string_path saved_game, command;
-        strconcat(sizeof(saved_game), saved_game, Core.UserName, "_", "quicksave");
+
+        string16 Q;
+        sprintf_s(Q, "%d", psActorQuickSaveNumberCurrent);
+
+        if (psActorQuickSaveNumberMax <= 1)
+            strconcat(sizeof(saved_game), saved_game, Core.UserName, "_", "quicksave");
+        else
+            xr_sprintf(saved_game, "%s - quicksave %d", Core.UserName, psActorQuickSaveNumberCurrent);
         if (!CSavedGameWrapper::valid_saved_game(saved_game))
             return;
 

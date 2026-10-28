@@ -41,7 +41,7 @@ public:
 
         return FALSE;
     }
-    void Play();
+    void Play(float master_volume = 1.f);
     void Stop();
     void SetVolume(float volume);
 };
@@ -54,10 +54,14 @@ class CLevelSoundManager
     MusicTrackVec m_MusicTracks;
     u32 m_NextTrackTime;
     int m_CurrentTrack{};
+    float m_MasterVolume{1.f};
 
 public:
     CLevelSoundManager();
     void Load();
     void Unload();
     void Update();
+
+    void SetMusicVolume(float v);
+    float GetMusicVolume() const { return m_MasterVolume; }
 };

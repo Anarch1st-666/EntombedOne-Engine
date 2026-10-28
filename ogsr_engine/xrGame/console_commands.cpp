@@ -551,8 +551,7 @@ public:
 
         string_path S, S1;
         S[0] = 0;
-        //.		sscanf					(args ,"%s",S);
-        strcpy_s(S, args);
+        strncpy_s(S, sizeof(S), args, _MAX_PATH - 1);
 
 #ifdef DEBUG
         CTimer timer;
@@ -560,7 +559,16 @@ public:
 #endif
         if (!xr_strlen(S))
         {
-            strconcat(sizeof(S), S, Core.UserName, "_", "quicksave");
+            if (psActorQuickSaveNumberCurrent >= psActorQuickSaveNumberMax || psActorQuickSaveNumberCurrent < 1)
+                psActorQuickSaveNumberCurrent = 1;
+            else
+                ++psActorQuickSaveNumberCurrent;
+
+            if (psActorQuickSaveNumberMax <= 1)
+                strconcat(sizeof(S), S, Core.UserName, "_", "quicksave");
+            else
+                xr_sprintf(S, "%s - quicksave %d", Core.UserName, psActorQuickSaveNumberCurrent);
+
             NET_Packet net_packet;
             net_packet.w_begin(M_SAVE_GAME);
             net_packet.w_stringZ(S);
@@ -1548,6 +1556,7 @@ void CCC_RegisterCommands()
     CMD1(CCC_ALifePath, "al_path"); // build path
 #endif // DEBUG
 
+    CMD4(CCC_Integer, "quick_save_counter_current", &psActorQuickSaveNumberCurrent, 0, 5);
     CMD1(CCC_ALifeSave, "save"); // save game
     CMD1(CCC_ALifeLoadFrom, "load"); // load game from ...
     CMD1(CCC_LoadLastSave, "load_last_save"); // load last saved game from ...

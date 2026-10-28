@@ -612,6 +612,9 @@ void CLevel::OnRender()
     ::Render->ui_is_rendering = false;
 }
 
+void CLevel::SetMusicVolume(float v) { LevelSoundManager()->SetMusicVolume(v); }
+float CLevel::GetMusicVolume() { return LevelSoundManager()->GetMusicVolume(); }
+
 void CLevel::OnEvent(EVENT E, u64 P1, u64 /**P2/**/)
 {
     if (E == eEntitySpawn)

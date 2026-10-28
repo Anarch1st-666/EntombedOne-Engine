@@ -148,7 +148,7 @@ void SMusicTrack::Load(LPCSTR fn, LPCSTR params)
     m_PauseTime.mul(1000); // convert sec to ms
 }
 
-void SMusicTrack::Play()
+void SMusicTrack::Play(float master_volume)
 {
     if (!stereo)
     {
@@ -158,7 +158,7 @@ void SMusicTrack::Play()
     else
         m_Sources[0].play_at_pos(0, Fvector().set(0.f, 0.f, 0.3f), sm_2D);
 
-    SetVolume(1.f);
+    SetVolume(master_volume);
 }
 
 void SMusicTrack::SetVolume(float volume)
@@ -236,6 +236,16 @@ void CLevelSoundManager::Unload()
     m_MusicTracks.clear();
 }
 
+void CLevelSoundManager::SetMusicVolume(float v)
+{
+    clamp(v, 0.f, 1.f);
+    m_MasterVolume = v;
+
+    for (auto& T : m_MusicTracks)
+        if (T.IsPlaying())
+            T.SetVolume(m_MasterVolume);
+}
+
 void CLevelSoundManager::Update()
 {
     if (Device.Paused())
@@ -288,7 +298,7 @@ void CLevelSoundManager::Update()
                 u32 idx = Random.randI(indices.size());
                 m_CurrentTrack = indices[idx];
                 SMusicTrack& T = m_MusicTracks[m_CurrentTrack];
-                T.Play();
+                T.Play(m_MasterVolume);
 #ifdef DEBUG
                 Log("- Play music track:", T.m_DbgName.c_str());
 #endif
