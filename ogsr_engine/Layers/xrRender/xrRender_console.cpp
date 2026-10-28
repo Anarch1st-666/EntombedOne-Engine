@@ -244,8 +244,8 @@ Fvector3 ps_ssfx_shadows{
 Fvector3 ps_ssfx_shadow_bias{0.4f, 0.03f, 0.0f};
 
 int ps_ssfx_bloom_use_presets = 0;
-Fvector4 ps_ssfx_bloom_1 = {4.f, 4.f, 0.f, 0.5f}; // Threshold, Exposure, -, Sky
-Fvector4 ps_ssfx_bloom_2 = {1.7f, 0.7f, 0.5f, 0.5f}; // Blur Radius, Vibrance, Lens, Dirt
+Fvector4 ps_ssfx_bloom_1 = {5.f, 1.f, 0.f, 0.f}; // Threshold, Exposure, -, Sky
+Fvector4 ps_ssfx_bloom_2 = {1.f, 0.f, 0.f, 0.f}; // Blur Radius, Vibrance, Lens, Dirt
 
 BOOL ps_ssfx_pom_refine{FALSE}, ps_ssfx_terrain_pom_refine{FALSE};
 Fvector4 ps_ssfx_pom = {16, 12, 0.035f, 0.4f}; // Samples , Range, Height, AO
@@ -258,7 +258,7 @@ Fvector4 ps_ssfx_wind_grass{9.5f, 1.4f, 1.5f, 0.4f}; // Anim Speed, Turbulence, 
 Fvector4 ps_ssfx_wind_trees{11.0f, 0.15f, 0.5f, 0.1f}; // Branches Speed, Trunk Speed, Bending, Min Wind Speed
 
 Fvector4 ps_ssfx_florafixes_1{0.1f, 0.2f, 0.2f, 0.3f}; // Specular value when the grass is dry, Specular value when the grass is wet, Specular when trees and bushes are dry, Specular when trees and bushes are wet
-Fvector4 ps_ssfx_florafixes_2{2.0f, 1.0f, 0.0f, 0.0f}; // Intensity of the flora SubSurface Scattering, How much sun color is added to the flora SubSurface Scattering (1.0 is 100% sun color)
+Fvector4 ps_ssfx_florafixes_2{0.0f, 1.0f, 0.0f, 0.0f}; // Intensity of the flora SubSurface Scattering, How much sun color is added to the flora SubSurface Scattering (1.0 is 100% sun color)
 
 int ps_ssfx_is_underground{};
 
