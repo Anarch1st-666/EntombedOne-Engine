@@ -156,7 +156,7 @@ void CGamePersistent::PreStart(LPCSTR op)
 void CGamePersistent::Start(LPCSTR op)
 {
     __super::Start(op);
-    m_intro_event.bind(this, &CGamePersistent::start_game_intro);
+    //m_intro_event.bind(this, &CGamePersistent::start_game_intro);
 }
 
 void CGamePersistent::Disconnect()

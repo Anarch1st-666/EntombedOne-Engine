@@ -16,6 +16,9 @@ protected:
     bool m_bPlayEachItem;
     bool GrabInput();
 
+private:
+    ref_sound m_sound;
+
 public:
     IInputReceiver* m_pStoredInputReceiver{};
     CUISequencer();

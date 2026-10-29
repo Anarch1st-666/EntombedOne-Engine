@@ -94,6 +94,14 @@ void CUISequencer::Start(LPCSTR tutor_name)
 
     m_bPlayEachItem = !!uiXml.ReadInt("play_each_item", 0, 0);
 
+    LPCSTR m_snd_name = uiXml.Read("sound", 0, "");
+    if (m_snd_name && m_snd_name[0])
+    {
+        m_sound.create(m_snd_name, st_Effect, sg_Undefined);
+        VERIFY(m_sound._handle());
+        m_sound.play(NULL, sm_2D);
+    }
+
     CUIXmlInit xml_init;
     xml_init.InitWindow(uiXml, "global_wnd", 0, m_UIWindow);
     //.	xml_init.InitAutoStaticGroup(uiXml, "global_wnd",		m_UIWindow);
@@ -120,6 +128,7 @@ void CUISequencer::Start(LPCSTR tutor_name)
 
 void CUISequencer::Destroy()
 {
+    m_sound.stop();
     m_bActive = false;
     Device.seqFrame.Remove(this);
     Device.seqRender.Remove(this);
